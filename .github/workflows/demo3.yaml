@@ -1,0 +1,57 @@
+name: demo3-aznights-feb-2022
+on: 
+  push:
+    branches:
+    - master
+    paths:
+    - demo3-keda/**
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      RESOURCE_GROUP: demo3-keda
+      LOCATION: canadacentral
+      CONTAINERAPPS_ENVIRONMENT: containerapps-env
+      LOG_ANALYTICS_WORKSPACE: containerapps-logs
+      STORAGE_ACCOUNT_QUEUE: myqueue
+      STORAGE_ACCOUNT_NAME: viperdan
+      DEPLOYMENT_NAME: aznightsdemo-keda
+    steps:
+    # Code checkout
+    - uses: actions/checkout@v2
+    # Log on to Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # Az bicep files deployment
+    - name: DeployContainerApps
+      uses: azure/cli@v1
+      with:
+        azcliversion: 2.30.0
+        inlineScript: |
+          az deployment sub create \
+          --name $DEPLOYMENT_NAME \
+          --location $LOCATION \
+          --template-file demo3-keda/main.bicep \
+          --parameters \
+              environment_name="$CONTAINERAPPS_ENVIRONMENT" \
+              storage_account_name="$STORAGE_ACCOUNT_NAME" \
+              resource_group="$RESOURCE_GROUP" \
+              workspace_name=$LOG_ANALYTICS_WORKSPACE
+          STORAGE_ACCOUNT_UNIQUE=`az deployment sub show --name $DEPLOYMENT_NAME --query properties.outputs.storageAccountUniqueName.value | tr -d '"'`
+          QUEUE_CONNECTION_STRING=`az storage account show-connection-string -g $RESOURCE_GROUP --name $STORAGE_ACCOUNT_UNIQUE --query connectionString --out json | tr -d '"'`
+          QUEUE=`az storage queue list --account-name $STORAGE_ACCOUNT_UNIQUE --connection-string $QUEUE_CONNECTION_STRING | tr -d '"'`
+          if [ $QUEUE == "[]" ]; then
+            az storage queue create \
+            --name "$STORAGE_ACCOUNT_QUEUE" \
+            --account-name $STORAGE_ACCOUNT_UNIQUE \
+            --connection-string $QUEUE_CONNECTION_STRING
+            az storage message put \
+            --content "Hello Queue Reader App" \
+            --queue-name "myqueue" \
+            --connection-string $QUEUE_CONNECTION_STRING
+          fi
+
+            
+            
+    

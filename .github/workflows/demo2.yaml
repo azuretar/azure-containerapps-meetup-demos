@@ -1,0 +1,43 @@
+name: demo2-aznights-feb-2022
+on: 
+  push:
+    branches:
+    - master
+    paths:
+    - demo2-gha/**
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      RESOURCE_GROUP: demo2-dapr
+      LOCATION: canadacentral
+      CONTAINERAPPS_ENVIRONMENT: containerapps-env
+      LOG_ANALYTICS_WORKSPACE: containerapps-logs
+      STORAGE_ACCOUNT_CONTAINER: mycontainer
+      STORAGE_ACCOUNT_NAME: viperdan
+      DEPLOYMENT_NAME: aznightsdemo-dapr
+    steps:
+    # Code checkout
+    - uses: actions/checkout@v2
+    # Log on to Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # Az bicep files deployment
+    - name: DeployContainerApps
+      uses: azure/cli@v1
+      with:
+        azcliversion: 2.30.0
+        inlineScript: |
+          az deployment sub create \
+          --name $DEPLOYMENT_NAME \
+          --location $LOCATION \
+          --template-file demo2-gha/main.bicep \
+          --parameters \
+              environment_name="$CONTAINERAPPS_ENVIRONMENT" \
+              storage_account_name="$STORAGE_ACCOUNT_NAME" \
+              storage_container_name="$STORAGE_ACCOUNT_CONTAINER" \
+              resource_group="$RESOURCE_GROUP" \
+              workspace_name=$LOG_ANALYTICS_WORKSPACE
+            
+    

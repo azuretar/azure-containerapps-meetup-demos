@@ -1,0 +1,75 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "defaultValue": "canadacentral",
+            "type": "String"
+        },
+        "environment_name": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "queueconnection": {
+            "defaultValue": "",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+    {
+        "name": "queuereader",
+        "type": "Microsoft.Web/containerApps",
+        "apiVersion": "2021-03-01",
+        "kind": "containerapp",
+        "location": "[parameters('location')]",
+        "properties": {
+            "kubeEnvironmentId": "[resourceId('Microsoft.Web/kubeEnvironments', parameters('environment_name'))]",
+            "configuration": {
+                "activeRevisionsMode": "single",
+                "secrets": [
+                {
+                    "name": "queueconnection",
+                    "value": "[parameters('queueconnection')]"
+                }]
+            },
+            "template": {
+                "containers": [
+                    {
+                        "image": "mcr.microsoft.com/azuredocs/containerapps-queuereader",
+                        "name": "queuereader",
+                        "env": [
+                            {
+                                "name": "QueueName",
+                                "value": "myqueue"
+                            },
+                            {
+                                "name": "QueueConnectionString",
+                                "secretref": "queueconnection"
+                            }
+                        ]
+                    }
+                ],
+                "scale": {
+                    "minReplicas": 1,
+                    "maxReplicas": 10,
+                    "rules": [
+                        {
+                            "name": "myqueuerule",
+                            "azureQueue": {
+                                "queueName": "myqueue",
+                                "queueLength": 2,
+                                "auth": [
+                                    {
+                                        "secretRef": "queueconnection",
+                                        "triggerParameter": "connection"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }]
+}

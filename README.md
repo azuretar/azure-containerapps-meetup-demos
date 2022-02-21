@@ -1,4 +1,4 @@
-- [aznights-demo-feb-2022](#aznights-demo-feb-2022)
+- [Azure Container Apps Demo](#Azure-Container-Apps-Demo)
 - [Overview - Demo 1 + 2](#overview---demo-1---2)
   * [Verify the result](#verify-the-result)
     + [Confirm successful state persistence](#confirm-successful-state-persistence)
@@ -9,14 +9,14 @@
   * [Verify the result](#verify-the-result-1)
       - [Bash](#bash-1)
 
-# aznights-demo-feb-2022
+# Azure Container Apps Demo
 
 [![demo2-aznights-feb-2022](https://github.com/vicperdana/aznights-demo-feb-2022/actions/workflows/demo2.yaml/badge.svg)](https://github.com/vicperdana/aznights-demo-feb-2022/actions/workflows/demo2.yaml)
 
 
 [![demo3-aznights-feb-2022](https://github.com/vicperdana/aznights-demo-feb-2022/actions/workflows/demo3.yaml/badge.svg)](https://github.com/vicperdana/aznights-demo-feb-2022/actions/workflows/demo3.yaml)
 
-
+This repo demonstrates two use cases of Container Apps using [Dapr](https://dapr.io/) and [KEDA](https://keda.sh/). 
 
 # Overview - Demo 1 + 2
 
@@ -97,3 +97,11 @@ az monitor log-analytics query \
   --analytics-query "ContainerAppConsoleLogs_CL | where ContainerAppName_s == 'queuereader' and Log_s contains 'Message ID'" \
   --out table
 ```
+
+## Maintainers
+
+- [Vic Perdana](https://github.com/VicPerdana)
+
+## License
+
+This project is [licensed under the MIT License][license].

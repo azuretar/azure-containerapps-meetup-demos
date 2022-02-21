@@ -3,10 +3,11 @@
   * [Verify the result](#verify-the-result)
     + [Confirm successful state persistence](#confirm-successful-state-persistence)
     + [View Logs](#view-logs)
+      - [Bash](#bash)
 - [Overview - Demo 3](#overview---demo-3)
-  * [REPLACE DIAGRAM](#replace-diagram)
-  * [Add messages to queue](#add-messages)
+  * [Add messages to the Queue](#add-messages-to-the-queue)
   * [Verify the result](#verify-the-result-1)
+      - [Bash](#bash-1)
 
 # aznights-demo-feb-2022
 

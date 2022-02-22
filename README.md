@@ -105,3 +105,4 @@ az monitor log-analytics query \
 ## License
 
 This project is [licensed under the MIT License][license].
+[license]: https://github.com/azuretar/Azure-ContainerApps-Demo/blob/master/LICENSE

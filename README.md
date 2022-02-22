@@ -16,7 +16,10 @@
 
 [![demo3-aznights-feb-2022](https://github.com/vicperdana/aznights-demo-feb-2022/actions/workflows/demo3.yaml/badge.svg)](https://github.com/vicperdana/aznights-demo-feb-2022/actions/workflows/demo3.yaml)
 
-This repo demonstrates two use cases of Container Apps using [Dapr](https://dapr.io/) and [KEDA](https://keda.sh/). 
+This repo demonstrates two use cases of Container Apps using [Dapr](https://dapr.io/) and [KEDA](https://keda.sh/).
+
+Recording of the presentation and demo can be viewed below.
+[![Azure Nights Meetup February 2022](https://img.youtube.com/vi/uhsD3oeTq1k/0.jpg)](https://www.youtube.com/watch?v=uhsD3oeTq1k)
 
 # Overview - Demo 1 + 2
 
